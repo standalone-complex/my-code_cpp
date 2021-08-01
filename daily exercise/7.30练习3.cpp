@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cjson/cJSON.h>
 /* Unicode码测试 */
 
 using std::cin;
