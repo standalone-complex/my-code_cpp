@@ -43,6 +43,9 @@
         "limits": "cpp",
         "new": "cpp",
         "stdexcept": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "types.h": "c",
+        "errno.h": "c",
+        "unistd.h": "c"
     }
 }
