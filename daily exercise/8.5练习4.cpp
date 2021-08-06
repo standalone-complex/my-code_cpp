@@ -12,8 +12,8 @@ using std::oct;
 int main(void)
 {
     unsigned char i(0b01110001);
-
-    cout << oct << i << endl;
+    int t = static_cast<int> (i);
+    cout << oct << t << endl;
 
     return 0;
 }
