@@ -47,5 +47,6 @@
         "types.h": "c",
         "errno.h": "c",
         "unistd.h": "c"
-    }
+    },
+    "commentTranslate.targetLanguage": "zh-CN"
 }
