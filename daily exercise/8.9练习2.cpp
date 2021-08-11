@@ -1,5 +1,7 @@
 #include <iostream>
 
+using namespace std;
+
 int comp(int, int);
 
 int main(void)
@@ -11,7 +13,7 @@ int main(void)
     k = 3;
     t = 4;
 
-    printf("%d", comp(i, j));
+    cout << comp(i, j) << endl;
 
     return 0;
 }
