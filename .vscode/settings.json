@@ -46,7 +46,8 @@
         "typeinfo": "cpp",
         "types.h": "c",
         "errno.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "shared_mutex": "cpp"
     },
     "commentTranslate.targetLanguage": "zh-CN"
 }
