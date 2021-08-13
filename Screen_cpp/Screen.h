@@ -6,9 +6,32 @@
 #include <string>
 #include <vector>
 
+class Screen;
+
+class Window_mgr
+{
+    public:
+
+        using ScreenIndex = std::vector<Screen>::size_type;
+        void clear(ScreenIndex);
+    
+    private:
+
+        /* error 
+        invalid use of incomplete type ‘class Screen’ 
+        could not convert ‘{<expression error>}’ 
+        from ‘<brace-enclosed initializer list>’ to ‘std::vector<Screen>’ */
+        std::vector<Screen> screens {Screen(24, 80, ' ')};
+
+};
+
 class Screen
 {
     public:
+
+        /* 友元声明 */
+      //friend class Window_mgr; //类为友元 （class可省略）
+        friend void Window_mgr::clear(ScreenIndex); //成员函数为友元
 
         typedef std::string::size_type pos;
 
@@ -26,6 +49,7 @@ class Screen
         Screen& move(pos, pos);
         Screen& set(char);
         Screen& set(pos, pos, char);
+        pos size() const {return height * width;}
 
         /* const的重载 解决 item.display(cout).set('#')的问题 */
         /* 通过做出输出和返回的分离解决问题 */
@@ -55,6 +79,8 @@ class Screen
         pos height = 0, width = 0;
     
 };
+
+/* Screen */
 
 /* 显式内联 */
 inline
@@ -90,6 +116,17 @@ Screen& Screen::set(pos row, pos column, char c)
     contents[t] = c;
 
     return *this;
+}
+
+/* Window_mgr */
+
+void Window_mgr::clear(ScreenIndex i)
+{
+    Screen& t = screens[i];
+
+    t.contents = std::string(t.height * t.width, ' ');
+
+    return;
 }
 
 #endif
