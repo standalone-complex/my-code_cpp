@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+/* 这种声明被成为前向声明（Forward Declaration），此时编译器只知道有这个类但是不清楚类的具体成员，所以会有26行的错误 */
 class Screen;
 
 class Window_mgr
@@ -13,6 +14,7 @@ class Window_mgr
     public:
 
         using ScreenIndex = std::vector<Screen>::size_type;
+
         void clear(ScreenIndex);
     
     private:
@@ -21,6 +23,9 @@ class Window_mgr
         invalid use of incomplete type ‘class Screen’ 
         could not convert ‘{<expression error>}’ 
         from ‘<brace-enclosed initializer list>’ to ‘std::vector<Screen>’ */
+        /*  问题就在这个前向声明上了 */
+        /*  问题的主要原因就是定义A类需要B类的依赖， 定义B类也需要A类的依赖，而前向声明不能解决这个问题， 
+            所以在习题集源码中，将A类需要的依赖删除，自然就解决了问题，也不需要前向声明了 */
         std::vector<Screen> screens {Screen(24, 80, ' ')};
 
 };
