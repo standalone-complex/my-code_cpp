@@ -1,6 +1,9 @@
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
+#include <list>
+#include <deque>
 
 using namespace std;
 
@@ -8,7 +11,9 @@ istream& fun(istream&);
 
 int main(void)
 {
-    fun(cin);
+    stringstream ss("Hello World!");
+
+    fun(ss);
 
     return 0;
 }

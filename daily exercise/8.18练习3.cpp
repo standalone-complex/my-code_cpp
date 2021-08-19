@@ -9,7 +9,7 @@ int main(void)
 {
     vector<string> word_array;
     string word;
-    ifstream in("8.18练习.txt");
+    fstream in("8.18练习.txt");
 
     while(in >> word)
     {
