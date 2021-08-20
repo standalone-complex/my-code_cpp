@@ -7,6 +7,12 @@ using namespace std;
 
 int main(void)
 {
+    /* capacity */
+    /* reserve */
+    /* shrink */
+    /* assign */
+    /* replace */
+    /* erase */
     vector<string> word_array;
     string word;
     fstream in("8.18练习.txt");
