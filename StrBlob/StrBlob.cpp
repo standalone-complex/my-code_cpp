@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "StrBlob.hpp"
 
 using namespace std;
@@ -18,6 +19,13 @@ int main(void)
 
     const StrBlob b3 = b1;
     cout << b3.front() << " " << b3.back() << endl;
+
+    //it1!=it2暂时实现不了
+    /*for(auto it1 = b1.begin(),
+        it2 = b1.end(); it1!=it2; it1.incr())
+    {
+        cout << it1.deref() << endl;
+    }*/
 
     return 0;
 }
