@@ -1,6 +1,13 @@
 #include <iostream>
 #include "TextQuery.hpp"
 
+/*
+    首先是TextQuery类的设计，一个动态分配的vecotr<string>和一个从字符串指向一个指向set的指针的map
+    接收一个ifstream流初始化，将文本以行为单位保存在vector中，将单词所在的行加入map对应值的动态分配的set中
+    QueryResult类接收一个string，一个指向set<size_t>的指针，还有一个指向vector<string>的指针
+    然后就可以输出，从set中得到出线次数和行号，带入vector的下标输出行信息
+*/
+
 using namespace std;
 
 void RunQuery(ifstream&);
