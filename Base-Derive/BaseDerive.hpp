@@ -16,7 +16,7 @@ class Base {
 
 class Derive: public Base {
     public:
-    Derive(): Base() { }
+    Derive() = default;
 };
 
 class Derive2: public Derive {
