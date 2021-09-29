@@ -9,6 +9,8 @@ int main(void)
 {
     string Aline;
 
+    using_history();
+
     while(true)
     {
         Aline = readline("enter expression, or q to quit: ");
@@ -17,6 +19,8 @@ int main(void)
         {
             break;
         }
+
+        add_history(Aline.c_str());
     }
 
     return 0;
