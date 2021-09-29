@@ -5,6 +5,8 @@
 #include <stack>
 #include <memory>
 #include <utility>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 using namespace std;
 
@@ -27,10 +29,12 @@ void Execute(void)
 
     while(true)
     {
-        cout << "enter expression, or q to quit: " << endl;
+        //cout << "enter expression, or q to quit: " << endl;
+        //getline(cin, Aline);
 
-        getline(cin, Aline);
+        using_history(); //initialize
 
+        Aline = readline("enter expression, or q to quit: ");
         Aline = Transform(Aline);
 
         if(Aline == "exit")
@@ -39,7 +43,7 @@ void Execute(void)
             continue;
         }
 
-        cout << Aline << endl;
+        //cout << Aline << endl;
         cout << calculate(Aline) << endl;
     }
 
@@ -52,6 +56,8 @@ string Transform(const string& line)
     {
         exit(1);
     }
+
+    add_history(line.c_str());
 
     stack<char> Stack_charactors;
     string ret;
