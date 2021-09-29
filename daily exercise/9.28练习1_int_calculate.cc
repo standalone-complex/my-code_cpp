@@ -10,6 +10,8 @@
 
 using namespace std;
 
+bool Error(false);
+
 void Execute(void);
 string Transform(const string&);
 int weight(const char);
@@ -26,6 +28,7 @@ int main(void)
 void Execute(void)
 {
     string Aline;
+    int num;
 
     while(true)
     {
@@ -43,8 +46,22 @@ void Execute(void)
             continue;
         }
 
+        if(Aline == "")
+        {
+            continue;
+        }
+
         //cout << Aline << endl;
-        cout << calculate(Aline) << endl;
+        num = calculate(Aline);
+
+        if(Error)
+        {
+            cout << "invalid charactor or syntax error!" << endl;
+            Error = false;
+            continue;
+        }
+
+        cout << num << endl;
     }
 
     return;
@@ -190,6 +207,11 @@ int calculate(const string& expression)
         if((item=="+") || (item=="-") || (item=="*") || (item=="/"))
         {
             calculate_operater(item, Stack_nums);
+
+            if(Error)
+            {
+                return 0;
+            }
         }
         else
         {
@@ -206,6 +228,12 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
 
     if(sign == "+")
     {
+        if(Stack_nums.size() < 2)
+        {
+            Error = true;
+            return;
+        }
+
         t2 = Stack_nums.top();
         Stack_nums.pop();
         t1 = Stack_nums.top();
@@ -215,6 +243,12 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
     }
     else if(sign == "-")
     {
+        if(Stack_nums.size() < 2)
+        {
+            Error = true;
+            return;
+        }
+
         t2 = Stack_nums.top();
         Stack_nums.pop();
         t1 = Stack_nums.top();
@@ -224,6 +258,12 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
     }
     else if(sign == "*")
     {
+        if(Stack_nums.size() < 2)
+        {
+            Error = true;
+            return;
+        }
+
         t2 = Stack_nums.top();
         Stack_nums.pop();
         t1 = Stack_nums.top();
@@ -231,8 +271,14 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
 
         Stack_nums.push(t1 * t2);
     }
-    else
+    else if(sign == "/")
     {
+        if(Stack_nums.size() < 2)
+        {
+            Error = true;
+            return;
+        }
+
         t2 = Stack_nums.top();
         Stack_nums.pop();
         t1 = Stack_nums.top();
