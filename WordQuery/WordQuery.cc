@@ -1,49 +1,60 @@
 #include <iostream>
-#include <sstream>
-#include <vector>
-#include <string>
+#include <fstream>
 #include <stack>
-#include <memory>
-#include <utility>
+#include "WordQuery.hh"
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <cmath>
 
 using namespace std;
 
+void Execute(TextQuery&);
+string Transform(const string&);
+Query calculate(const string&);
+int weight(const char);
+void calculate_operater(const string&, stack<Query>&);
+
 bool Error(false);
 
-void Execute(void);
-string Transform(const string&);
-int weight(const char);
-int calculate(const string&);
-void calculate_operater(const string&, stack<int>&);
-
-int main(void)
+int main(int argc, char* argv[])
 {
-    Execute();
+    if(argc != 2)
+    {
+        cout << "Error format!" << endl;
+        exit(1);
+    }
+
+    ifstream in(argv[1]);
+
+    if(!in)
+    {
+        cout << "Open file error!" << endl;
+        exit(1);
+    }
+
+    TextQuery TQ(in);
+
+    Execute(TQ);
 
     return 0;
 }
 
-void Execute(void)
+void Execute(TextQuery& TQ)
 {
     string Aline;
-    int num;
+    //Query res;
 
-    using_history(); //initialize
+    using_history();
 
     while(true)
     {
-        //cout << "enter expression, or q to quit: " << endl;
-        //getline(cin, Aline);
-
-        Aline = readline("enter expression, or q to quit: ");
+        Aline = readline("enter experssion, or q to quit: ");
         Aline = Transform(Aline);
 
-        if(Aline == "exit")
+        if(Error)
         {
             cout << "invalid charactor or syntax error!" << endl;
+            add_history(Aline.c_str());
+            Error = false;
             continue;
         }
 
@@ -52,17 +63,17 @@ void Execute(void)
             continue;
         }
 
-        //cout << Aline << endl;
-        num = calculate(Aline);
+        Query res(calculate(Aline));
 
         if(Error)
         {
             cout << "invalid charactor or syntax error!" << endl;
+            add_history(Aline.c_str());
             Error = false;
             continue;
         }
 
-        cout << num << endl;
+        print(cout, res.eval(TQ)) << endl;
     }
 
     return;
@@ -82,11 +93,6 @@ string Transform(const string& line)
     string num;
     string Aline;
     bool flag(true);
-    
-    if(line[0] == '-')
-    {
-        Aline += '0';
-    }
 
     Aline += line + "#";
 
@@ -101,8 +107,8 @@ string Transform(const string& line)
         {
             continue;
         }
-        //如果是数字
-        else if(*itc >= '0' && *itc <= '9')
+        //如果是单词
+        else if((*itc >= 'a' && *itc <= 'z') || (*itc >= 'A' && *itc <= 'Z'))
         {
             num += *itc;
             flag = true;
@@ -111,7 +117,8 @@ string Transform(const string& line)
         {
             if(weight(*itc) == -1)
             {
-                return "exit";
+                Error = true;
+                return "";
             }
 
             if(flag == true)
@@ -133,7 +140,8 @@ string Transform(const string& line)
 
                     if(Stack_charactors.empty())
                     {
-                        return "exit";
+                        Error = true;
+                        return "";
                     }
                 }
                 Stack_charactors.pop();
@@ -165,29 +173,17 @@ int weight(const char sign)
         {
             return 0;
         }
-        case '+':
+        case '|':
         {
             return 1;
         }
-        case '-':
+        case '&':
         {
             return 1;
         }
-        case '*':
+        case '~':
         {
-            return 2;
-        }
-        case '/':
-        {
-            return 2;
-        }
-        case '%':
-        {
-            return 2;
-        }
-        case '^':
-        {
-            return 3;
+            return 1;
         }
         case '(':
         {
@@ -204,38 +200,38 @@ int weight(const char sign)
     }
 }
 
-int calculate(const string& expression)
+Query calculate(const string& expression)
 {
     int ret;
     istringstream is(expression);
     string item;
-    stack<int> Stack_nums;
+    stack<Query> Stack_nums;
 
     while(is >> item)
     {
-        if((item=="+") || (item=="-") || (item=="*") || (item=="/") || (item=="%") || (item=="^"))
+        if((item=="|") || (item=="&") || (item=="~"))
         {
             calculate_operater(item, Stack_nums);
 
             if(Error)
             {
-                return 0;
+                return Query("");
             }
         }
         else
         {
-            Stack_nums.push(atoi(item.c_str()));
+            Stack_nums.push(Query(item));
         }
     }
 
     return Stack_nums.top();
 }
 
-void calculate_operater(const string& sign, stack<int>& Stack_nums)
+void calculate_operater(const string& sign, stack<Query>& Stack_nums)
 {
-    int t1, t2;
+    //Query t1, t2;
 
-    if(sign == "+")
+    if(sign == "|")
     {
         if(Stack_nums.size() < 2)
         {
@@ -243,14 +239,14 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
             return;
         }
 
-        t2 = Stack_nums.top();
+        Query t2(Stack_nums.top());
         Stack_nums.pop();
-        t1 = Stack_nums.top();
+        Query t1(Stack_nums.top());
         Stack_nums.pop();
 
-        Stack_nums.push(t1 + t2);
+        Stack_nums.push(t1 | t2);
     }
-    else if(sign == "-")
+    else if(sign == "&")
     {
         if(Stack_nums.size() < 2)
         {
@@ -258,72 +254,25 @@ void calculate_operater(const string& sign, stack<int>& Stack_nums)
             return;
         }
 
-        t2 = Stack_nums.top();
+        Query t2(Stack_nums.top());
         Stack_nums.pop();
-        t1 = Stack_nums.top();
+        Query t1(Stack_nums.top());
         Stack_nums.pop();
 
-        Stack_nums.push(t1 - t2);
+        Stack_nums.push(t1 & t2);
     }
-    else if(sign == "*")
+    else if(sign == "~")
     {
-        if(Stack_nums.size() < 2)
+        if(Stack_nums.size() < 1)
         {
             Error = true;
             return;
         }
 
-        t2 = Stack_nums.top();
-        Stack_nums.pop();
-        t1 = Stack_nums.top();
+        Query t1(Stack_nums.top());
         Stack_nums.pop();
 
-        Stack_nums.push(t1 * t2);
-    }
-    else if(sign == "/")
-    {
-        if(Stack_nums.size() < 2)
-        {
-            Error = true;
-            return;
-        }
-
-        t2 = Stack_nums.top();
-        Stack_nums.pop();
-        t1 = Stack_nums.top();
-        Stack_nums.pop();
-
-        Stack_nums.push(t1 / t2);
-    }
-    else if(sign == "%")
-    {
-        if(Stack_nums.size() < 2)
-        {
-            Error = true;
-            return;
-        }
-
-        t2 = Stack_nums.top();
-        Stack_nums.pop();
-        t1 = Stack_nums.top();
-        Stack_nums.pop();
-
-        Stack_nums.push(t1 % t2);
-    }
-    else if(sign == "^")
-    {
-        if(Stack_nums.size() < 2)
-        {
-            Error = true;
-            return;
-        }
-
-        t2 = Stack_nums.top();
-        Stack_nums.pop();
-        t1 = Stack_nums.top();
-        Stack_nums.pop();
-
-        Stack_nums.push(pow(t1, t2));
+        Stack_nums.push(~t1);
     }
 
     return;

@@ -31,8 +31,7 @@ class TextQuery {
 
 class QueryResult {
     friend std::ostream& print(std::ostream&, const QueryResult&);
-
-    public:
+public:
     using line_no = std::vector<std::string>::size_type;
 
     QueryResult(std::string Word,
@@ -40,7 +39,11 @@ class QueryResult {
                 std::shared_ptr<std::set<line_no>> SetPtr):
         Word(Word), VecPtr(VecPtr), SetPtr(SetPtr) { }
 
-    private:
+    std::set<line_no>::size_type size() const { return SetPtr->size(); }
+    std::set<line_no>::const_iterator begin() const { return SetPtr->begin(); }
+    std::set<line_no>::const_iterator end() const { return SetPtr->end(); }
+    std::shared_ptr<std::vector<std::string>> get_file() { return VecPtr; }
+private:
     std::string Word;
     std::shared_ptr<std::vector<std::string>> VecPtr;
     std::shared_ptr<std::set<line_no>> SetPtr;
