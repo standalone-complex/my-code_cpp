@@ -34,8 +34,7 @@ private:
 };
 
 inline
-std::ostream& operator<<(std::ostream& os, const Query& query)
-{
+std::ostream& operator<<(std::ostream& os, const Query& query) {
     return os << query.rep();
 }
 
@@ -87,25 +86,21 @@ class OrQuery: public BinQuery {
 };
 
 inline
-Query operator&(const Query& lhs, const Query& rhs)
-{
+Query operator&(const Query& lhs, const Query& rhs) {
     return std::shared_ptr<QueryBase>(new AndQuery(lhs, rhs));
 }
 
 inline
-Query operator|(const Query& lhs, const Query& rhs)
-{
+Query operator|(const Query& lhs, const Query& rhs) {
     return std::shared_ptr<QueryBase>(new OrQuery(lhs, rhs));
 }
 
 inline
-Query operator~(const Query& nq)
-{
+Query operator~(const Query& nq) {
     return std::shared_ptr<QueryBase>(new NotQuery(nq));
 }
 
-QueryResult NotQuery::eval(const TextQuery& TQ) const
-{
+QueryResult NotQuery::eval(const TextQuery& TQ) const {
     QueryResult ret = query.eval(TQ);
     std::shared_ptr<std::set<line_no>> ret_SetPtr(new std::set<line_no>);
 
@@ -114,14 +109,10 @@ QueryResult NotQuery::eval(const TextQuery& TQ) const
     std::vector<std::string>::size_type sz = ret.get_file()->size();
 
     //这段循环匹配算法挺有意思的
-    for(std::size_t n=0; n!=sz; ++n)
-    {
-        if(itc == ite || *itc != n)
-        {
+    for(std::size_t n=0; n!=sz; ++n) {
+        if(itc == ite || *itc != n) {
             ret_SetPtr->insert(n);
-        }
-        else if(itc != ite)
-        {
+        } else if(itc != ite) {
             ++itc;
         }
     }
@@ -129,8 +120,7 @@ QueryResult NotQuery::eval(const TextQuery& TQ) const
     return QueryResult(rep(), ret.get_file(), ret_SetPtr);
 }
 
-QueryResult AndQuery::eval(const TextQuery& TQ) const
-{
+QueryResult AndQuery::eval(const TextQuery& TQ) const {
     QueryResult left = lhs.eval(TQ), right = rhs.eval(TQ);
 
     std::shared_ptr<std::set<line_no>> ret_SetPtr(new std::set<line_no>);
@@ -141,8 +131,7 @@ QueryResult AndQuery::eval(const TextQuery& TQ) const
     return QueryResult(rep(), left.get_file(), ret_SetPtr);
 }
 
-QueryResult OrQuery::eval(const TextQuery& TQ) const
-{
+QueryResult OrQuery::eval(const TextQuery& TQ) const {
     QueryResult left = lhs.eval(TQ), right = rhs.eval(TQ);
 
     std::shared_ptr<std::set<line_no>> ret_SetPtr(new std::set<line_no>(left.begin(), left.end()));
