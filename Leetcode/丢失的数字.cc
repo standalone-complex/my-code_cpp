@@ -21,7 +21,3 @@ public:
         return 0;
     }
 };
-// Line 15: Char 5: error: non-void function does not return a value in all control paths [-Werror,-Wreturn-type]
-//     }
-//     ^
-// 1 error generated.
