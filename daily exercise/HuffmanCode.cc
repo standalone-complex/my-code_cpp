@@ -22,11 +22,13 @@ struct TreeNode {
 
 // 自底向上
 TreeNode* HuffmanTree(map<int, char>&);
+void HuffmanCode(TreeNode*, map<string, string>&);
 
 int main(void) {
     int n1, n3;
     string n2;
     map<int, TreeNode*> HuffmanTable;
+    map<char, string> Map_Ret;
     vector<int> Vec;
 
     cin >> n1 >> n2;
@@ -42,6 +44,12 @@ int main(void) {
     }
 
     TreeNode* root = HuffmanTree(HuffmanTable);
+
+    HuffmanCode(root, Map_Ret, "");
+
+    for(auto i : Map_Ret) {
+        cout << i.first << ":" << i.second << endl;
+    }
 
     return 0;
 }
@@ -68,4 +76,21 @@ TreeNode* HuffmanTree(map<int, TreeNode*>& Table) {
     Table[NewWeight] = NewNode;
 
     HuffmanTree(Table);
+}
+
+void HuffmanCode(TreeNode* node, map<char, string> map_ret, string Code) {
+    if(!node) {
+        return;
+    }
+    
+    if(!node->left && !node->right) {
+        map_ret[node->val] = Code;
+        return;
+    }
+
+    string lCode = Code + '0';
+    string rCode = Code + '1';
+
+    HuffmanCode(node->left, map_ret, lCode);
+    HuffmanCode(node->right, map_ret, rCode);
 }

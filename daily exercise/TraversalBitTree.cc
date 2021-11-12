@@ -17,7 +17,7 @@ int main(void) {
     Vec = obj.inorderTraversal(root);
 
     for(auto& i : Vec) {
-        std::cout << i << " " << std::endl;
+        std::cout << i << " ";
     }
 }
 

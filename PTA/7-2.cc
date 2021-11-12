@@ -7,6 +7,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::map;
+using std::multimap;
 using std::string;
 
 string cleanup_str(const string& str);
@@ -14,6 +15,7 @@ string cleanup_str(const string& str);
 int main(void) {
     string Word;
     map<string, int> Map;
+    multimap<int, string> Map_reverse;
 
     while(cin >> Word) {
         if(Word == "!!!!!") {
@@ -31,11 +33,29 @@ int main(void) {
 
     cout << Map.size() << endl;
 
-    auto itc = Map.cbegin();
-    
-    for(int i = 0; i<10; ++i, ++itc) {
-        cout << itc->first << "=" << itc->second << endl;
+    for(auto i : Map) {
+        // Map_reverse[i.second] = i.first;
+        Map_reverse.insert(make_pair(i.second, i.first));
     }
+
+    int count(0);
+
+    for(auto itc = Map_reverse.crbegin(), ite = Map_reverse.crend();
+        itc!=ite; ++itc)
+    {
+        if(count == 10) {
+            break;
+        }
+
+        cout << itc->second << "=" << itc->first << endl;
+        ++count;
+    }
+
+    // auto itc = Map.cbegin();
+    
+    // for(int i = 0; i<10; ++i, ++itc) {
+    //     cout << itc->first << "=" << itc->second << endl;
+    // }
 
     return 0;
 }

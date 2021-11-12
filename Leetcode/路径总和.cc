@@ -12,7 +12,7 @@ bool traversal(TreeNode* node, int targetSum) {
         return false;
     }
 
-    if(node->left == NULL && node->right == NULL) {
+    if(node->left == nullptr && node->right == nullptr) {
         return targetSum == node->val;
     }
 
