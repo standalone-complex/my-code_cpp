@@ -3,7 +3,7 @@
 
 using std::map;
 using std::string;
-
+/* No anonymous write access. */
 class MapSum {
 public:
     MapSum() = default;
