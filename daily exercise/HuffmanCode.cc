@@ -1,23 +1,27 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <map>
 #include <vector>
+#include "/home/tyf/Downloads/json.hpp"
 // #include "/home/tyf/my-code_cpp/Leetcode/二叉树的中序遍历_1.cc"
 
 using std::cin;
 using std::cout;
+using std::ofstream;
 using std::endl;
 using std::string;
 using std::map;
 using std::vector;
+using nlohmann::json;
 
 struct TreeNode {
     char val;
     TreeNode *left;
     TreeNode *right;
     TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    TreeNode(char x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(char x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
 // 自底向上
@@ -30,6 +34,7 @@ int main(void) {
     map<int, TreeNode*> HuffmanTable;
     map<char, string> Map_Ret;
     vector<int> Vec;
+    json js;
 
     cin >> n1 >> n2;
 
@@ -48,8 +53,15 @@ int main(void) {
     HuffmanCode(root, Map_Ret, "");
 
     for(auto i : Map_Ret) {
+        js[i.second] = i.first;
         cout << i.first << ":" << i.second << endl;
     }
+
+    string CodeMap(js.dump());
+
+    ofstream os("HuffmanTable.json");
+
+    os << CodeMap << endl;
 
     return 0;
 }
@@ -78,7 +90,7 @@ TreeNode* HuffmanTree(map<int, TreeNode*>& Table) {
     HuffmanTree(Table);
 }
 
-void HuffmanCode(TreeNode* node, map<char, string> map_ret, string Code) {
+void HuffmanCode(TreeNode* node, map<char, string>& map_ret, string Code) {
     if(!node) {
         return;
     }
