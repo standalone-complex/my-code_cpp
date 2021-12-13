@@ -1,7 +1,7 @@
 #ifndef _WORDQUERY_
 #define _WORDQUERY_
 
-#include "/home/tyf/my-code_cpp/TextQuery/TextQuery.hh"
+#include "/home/tyf/Code/my-code_cpp/TextQuery/TextQuery.hh"
 #include <iostream>
 #include <string>
 #include <memory>
