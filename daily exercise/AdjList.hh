@@ -3,13 +3,14 @@
 #include <iostream>
 #include <vector>
 #include <string>
-// #include <memory>
+#include <memory>
 
 using std::cin;
 using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
+using std::shared_ptr;
 
 // 数据抽象 继承 动态绑定
 
@@ -22,7 +23,8 @@ private:
 
     struct VertexNode {
         VertexType Data;
-        EdgeNode* Next;
+        // EdgeNode* Next;
+        shared_ptr<EdgeNode> Next;
     };
 
     struct EdgeNode {
@@ -31,7 +33,8 @@ private:
 
         int VertexIndex;
         EdgeType Weight;
-        EdgeNode* Next;
+        // EdgeNode* Next;
+        shared_ptr<EdgeNode> Next;
     };
 public:
 // 成员函数\
@@ -67,12 +70,12 @@ AdjList::AdjList(int& VertexNum):
 }
 
 void AdjList::AddEdge(int From, int To, EdgeType Weight = 0) {
-    // std::shared_ptr<EdgeNode> NewNode = std::make_shared<EdgeNode>(To);
-    EdgeNode* NewEdge = new EdgeNode(To, Weight);
+    shared_ptr<EdgeNode> NewNode(std::make_shared<EdgeNode>(To));
+    // EdgeNode* NewEdge = new EdgeNode(To, Weight);
 
     // 头插
-    NewEdge->Next = VertexArray[From].Next;
-    VertexArray[From].Next = NewEdge;
+    NewNode->Next = VertexArray[From].Next;
+    VertexArray[From].Next = NewNode;
 
     return;
 }
