@@ -1,0 +1,6 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/tyf/Code/my-code_cpp/daily exercise'
+make: Leaving directory '/home/tyf/Code/my-code_cpp/daily exercise'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
